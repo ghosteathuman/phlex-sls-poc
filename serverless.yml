@@ -1,0 +1,31 @@
+service: phlex-sls-poc
+
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: ruby2.7
+  region: ${self:custom.defaultRegion}
+  stage: ${opt:stage, 'dev'}
+
+plugins:
+  - serverless-ruby-layer
+
+functions:
+  privacy:
+    handler: handler.privacy
+    events:
+      - httpApi:
+          method: GET
+          path: /privacy
+  terms:
+    handler: handler.tos
+    events:
+      - httpApi:
+          method: GET
+          path: /tos
+
+custom:
+  defaultRegion: eu-central-1
+  rubyLayer:
+    use_docker: true
